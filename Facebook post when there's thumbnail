@@ -1,0 +1,36 @@
+import requests
+
+# --------------------
+# FACEBOOK CONFIG
+# --------------------
+PAGE_ACCESS_TOKEN = "EAAceN6jEsJoBPQm8wZB3uYIfxCtvZAPFmqAf1HV1THKMROym56weP4ZB5ZCBcjHL4Ss73ZAEm3jerlaSjcTdLNv0D1utLkhoV8SIPduKCRZAuMp1GoAAeGkU793cL7V1Yvt8jZAPec4kxqkC6EPUGDYPQFv6mZAIlkZCCokAZARihomFWKjiTYUJeS5QKZBIICGtK9cqwb9ZBVy6"
+PAGE_ID = "736191356250416"
+
+# --------------------
+# ARTICLE DATA (from your XML)
+# --------------------
+title = "Xiaomi 17 Pro and 17 Pro Max: Specs, Release Date, Price, Features"
+summary = "Following the 15 Ultra, the new Xiaomi 17 Pro Max sounds and looks very familiar to a certain iPhone, but with a twist."
+article_url = "https://www.wired.com/story/xiaomi-17-pro-max-hands-on/"
+thumbnail_url = "https://media.wired.com/photos/68d5b27a23cd21f041c06ba4/master/pass/Xiaomi%2017%20Pro%20and%2017%20Pro%20Max%203%20SOURCE%20Simon%20Hill.png"
+
+# Construct message for Facebook
+message = f"{title}\n\n{summary}\n\nRead more: {article_url}"
+
+# --------------------
+# POST TO FACEBOOK (with thumbnail)
+# --------------------
+url = f"https://graph.facebook.com/{PAGE_ID}/photos"
+payload = {
+    "url": thumbnail_url,  # attach the thumbnail
+    "caption": message,
+    "access_token": PAGE_ACCESS_TOKEN
+}
+
+response = requests.post(url, data=payload)
+
+if response.status_code == 200:
+    print("✅ Post successfully published with thumbnail!")
+    print("Facebook post ID:", response.json().get("id"))
+else:
+    print("❌ Error posting to Facebook:", response.text)

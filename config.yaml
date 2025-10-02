@@ -1,0 +1,93 @@
+# Enterprise News Automation Configuration
+# All settings are configurable - modify as needed
+
+# RSS Feed Sources
+feeds:
+  - url: "https://techcrunch.com/feed/"
+    name: "TechCrunch"
+  - url: "https://www.theverge.com/rss/index.xml"
+    name: "The Verge"
+  - url: "https://feeds.arstechnica.com/arstechnica/index"
+    name: "Ars Technica"
+  - url: "https://www.wired.com/feed/rss"
+    name: "Wired"
+  - url: "https://www.engadget.com/rss.xml"
+    name: "Engadget"
+
+# WebSub/Superfeedr Configuration
+webhook:
+  port: 5000
+  callback_url: "https://your-domain.com/webhook"
+  hub_url: "https://push.superfeedr.com"
+  lease_seconds: 86400  # 24 hours
+
+# AI Configuration
+ai:
+  provider: "groq"  # Currently supports: groq (easily extensible)
+  model: "llama-3.3-70b-versatile"
+  max_tokens: 150
+  timeout: 30
+  retry_attempts: 3
+  retry_delay: 2  # seconds between retries
+
+# Rate Limiting & Delays
+rate_limiting:
+  ai_request_delay: 2  # seconds between AI API calls
+  news_processing_delay: 5  # seconds between processing each news item
+  max_concurrent_requests: 3
+
+# Duplicate Detection
+duplicate_detection:
+  similarity_threshold: 0.75
+  model: "all-MiniLM-L6-v2"
+  enabled: true
+
+# Data Retention
+data_retention:
+  news_cleanup_hours: 24  # Auto-delete news after X hours
+  logs_cleanup_hours: 24  # Auto-delete logs after X hours
+  cleanup_interval_minutes: 60  # How often to run cleanup
+
+# Database Configuration
+database:
+  type: "sqlite"  # Currently supports: sqlite (easily extensible)
+  path: "data/news_automation.db"
+  backup_enabled: true
+  backup_interval_hours: 6
+
+# Logging Configuration
+logging:
+  level: "DEBUG"  # DEBUG, INFO, WARNING, ERROR
+  file_path: "logs/automation.log"
+  max_file_size_mb: 50
+  backup_count: 5
+  console_output: true
+
+# Social Media Platforms
+social_media:
+  facebook:
+    enabled: true
+    accounts:
+      - page_id: "736191356250416"
+        name: "Main Tech Page"
+        enabled: true
+  # Future platforms can be added here
+  # twitter:
+  #   enabled: false
+  #   accounts: []
+  # instagram:
+  #   enabled: false
+  #   accounts: []
+
+# Error Handling
+error_handling:
+  max_retries: 3
+  retry_delay: 5
+  continue_on_error: true
+  notification_email: ""  # Optional: email for critical errors
+
+# Performance Monitoring
+monitoring:
+  enabled: true
+  metrics_retention_days: 7
+  performance_logging: true

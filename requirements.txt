@@ -1,0 +1,44 @@
+# Core Dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+PyYAML==6.0.1
+python-dotenv==1.0.0
+
+# Database
+sqlalchemy==2.0.23
+alembic==1.13.1
+
+# HTTP Requests
+httpx==0.25.2
+aiohttp==3.9.1
+
+# AI & ML
+sentence-transformers==2.2.2
+torch==2.1.1
+transformers==4.36.0
+
+# XML Processing
+lxml==4.9.3
+feedparser==6.0.10
+beautifulsoup4==4.12.2
+
+# Utilities
+python-multipart==0.0.6
+croniter==2.0.1
+schedule==1.2.0
+rich==13.7.0
+
+# Logging & Monitoring
+structlog==23.2.0
+prometheus-client==0.19.0
+
+# Security
+cryptography==41.0.8
+
+# Development & Testing (Optional)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+black==23.11.0
+flake8==6.1.0

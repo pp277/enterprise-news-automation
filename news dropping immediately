@@ -1,0 +1,123 @@
+// subscribe-confirm.js
+// Usage: SUPERFEEDR_USER=you SUPERFEEDR_PASS=token CALLBACK_URL=https://your-domain/webhook node subscribe-confirm.js
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const axios = require('axios');
+const crypto = require('crypto');
+
+const HUB_URL = process.env.HUB_URL || 'https://push.superfeedr.com';
+const USER = process.env.SUPERFEEDR_USER;
+const PASS = process.env.SUPERFEEDR_PASS;
+const CALLBACK = process.env.CALLBACK_URL;
+const PORT = parseInt(process.env.PORT || '5000', 10);
+
+// Comma-separated FEEDS env var fallback to tech list
+const FEEDS = (process.env.FEEDS || [
+  'https://techcrunch.com/feed/',
+  'https://www.theverge.com/rss/index.xml',
+  'https://feeds.arstechnica.com/arstechnica/index',
+  'https://www.wired.com/feed/rss',
+  'https://www.engadget.com/rss.xml'
+].join(',')).split(',').map(s => s.trim()).filter(Boolean);
+
+if (!USER || !PASS || !CALLBACK) {
+  console.error('Missing env. Set SUPERFEEDR_USER, SUPERFEEDR_PASS and CALLBACK_URL.');
+  process.exit(1);
+}
+
+const app = express();
+app.use(bodyParser.text({ type: '*/*' }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Simple in-memory map of feed -> secret (so later you can verify signatures if needed)
+const secrets = new Map();
+
+// WebSub verification (hub will GET this during subscribe handshake)
+app.get('/webhook', (req, res) => {
+  const hubMode = req.query['hub.mode'];
+  const hubTopic = req.query['hub.topic'];
+  const hubChallenge = req.query['hub.challenge'];
+  const hubLease = req.query['hub.lease_seconds'];
+
+  console.log('--- Incoming verification GET ---');
+  console.log('query:', req.query);
+
+  if (hubMode && hubChallenge) {
+    console.log(`Verification request for topic: ${hubTopic} mode=${hubMode} lease=${hubLease}`);
+    res.status(200).send(String(hubChallenge));
+    return;
+  }
+
+  res.status(200).send('OK');
+});
+
+// Notification handler (hub will POST feed content here)
+app.post('/webhook', (req, res) => {
+  console.log('--- Incoming notification POST ---');
+  console.log('Headers:', req.headers);
+  console.log('Body (first 2000 chars):\n', (req.body || '').toString().slice(0, 2000));
+  res.status(200).send('OK');
+});
+
+async function subscribeFeed(feedUrl) {
+  try {
+    const secret = crypto.randomBytes(16).toString('hex');
+    secrets.set(feedUrl, secret);
+
+    const params = new URLSearchParams();
+    params.append('hub.mode', 'subscribe');
+    params.append('hub.topic', feedUrl);
+    params.append('hub.callback', CALLBACK);
+    params.append('hub.verify', 'async');
+    params.append('hub.secret', secret);
+    params.append('hub.lease_seconds', '86400'); // 24h
+
+    const auth = 'Basic ' + Buffer.from(`${USER}:${PASS}`).toString('base64');
+
+    const resp = await axios.post(HUB_URL, params.toString(), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': auth
+      },
+      validateStatus: null,
+      timeout: 15000
+    });
+
+    console.log(`Subscribe request to ${feedUrl} -> status ${resp.status}`);
+    if (resp.data) {
+      console.log(
+        'Response body (first 1000 chars):',
+        (typeof resp.data === 'string'
+          ? resp.data
+          : JSON.stringify(resp.data)
+        ).slice(0, 1000)
+      );
+    }
+    if (resp.status >= 200 && resp.status < 300) {
+      console.log(`→ Subscription request accepted for ${feedUrl}. The hub will now verify by calling your callback.`);
+    } else {
+      console.warn(`→ Subscription request returned status ${resp.status}. Check credentials / callback reachability.`);
+    }
+
+  } catch (err) {
+    if (err.response) {
+      console.error(`Error subscribing to ${feedUrl}:`, err.response.status, err.response.data);
+    } else {
+      console.error(`Network/error subscribing to ${feedUrl}:`, err.message);
+    }
+  }
+}
+
+app.listen(PORT, async () => {
+  console.log(`Webhook server listening on port ${PORT}`);
+  console.log(`Callback URL set to: ${CALLBACK}`);
+  console.log('Feeds to subscribe:', FEEDS);
+
+  for (const f of FEEDS) {
+    console.log(`Subscribing to ${f}`);
+    await subscribeFeed(f);
+  }
+
+  console.log('All subscribe requests sent. Watch this console for verification GETs and notification POSTs.');
+});

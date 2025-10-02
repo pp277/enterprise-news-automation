@@ -1,0 +1,48 @@
+import requests
+
+# --------------------
+# CONFIGURATION
+# --------------------
+API_KEY = "YOUR_API_KEY"  # Replace with your Groq key
+MODEL = "llama-3.3-70b-versatile"
+ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
+
+# Example full news article
+full_article = """
+Apple has announced the launch of the iPhone 16, featuring a larger battery, improved camera system, and a brighter display.
+The company stated that the device will be available starting October 20 in select countries, and pre-orders begin next week.
+This update aims to address customer feedback about battery life and performance. Analysts predict strong sales for the new model.
+"""
+
+# --------------------
+# CHAT PAYLOAD
+# --------------------
+payload = {
+    "model": MODEL,
+    "messages": [
+        {
+            "role": "user",
+            "content": f"Rewrite the following news article into an engaging social media post (can include emojis if appropriate):\n{full_article}"
+        }
+    ],
+    "max_tokens": 150
+}
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
+}
+
+# --------------------
+# SEND REQUEST
+# --------------------
+response = requests.post(ENDPOINT, headers=headers, json=payload)
+result = response.json()
+
+# --------------------
+# EXTRACT REWRITTEN TEXT
+# --------------------
+rewritten = result.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
+
+print("Original Article:\n", full_article)
+print("\nRewritten Post:\n", rewritten)

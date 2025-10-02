@@ -1,0 +1,38 @@
+import requests
+
+# --------------------
+# FACEBOOK CONFIG
+# --------------------
+PAGE_ACCESS_TOKEN = "EAAceN6jEsJoBPQm8wZB3uYIfxCtvZAPFmqAf1HV1THKMROym56weP4ZB5ZCBcjHL4Ss73ZAEm3jerlaSjcTdLNv0D1utLkhoV8SIPduKCRZAuMp1GoAAeGkU793cL7V1Yvt8jZAPec4kxqkC6EPUGDYPQFv6mZAIlkZCCokAZARihomFWKjiTYUJeS5QKZBIICGtK9cqwb9ZBVy6"
+PAGE_ID = "736191356250416"
+
+# --------------------
+# ARTICLE DATA (from The Verge XML)
+# --------------------
+title = "Microsoft and Asus open Xbox Ally preorders — the X costs $999"
+summary = ("Today, Microsoft and Asus are officially opening preorders for the ROG Xbox Ally and ROG Xbox Ally X "
+           "at $599 and $999 respectively in the US. They’re $799 CAD and $1299 CAD in Canada, €599 and €899 in Europe, "
+           "£499 and £799 in the UK, and $799 AUD and $1599 AUD in Australia.")
+article_url = "https://www.theverge.com/?p=784286"
+image_url = "https://platform.theverge.com/wp-content/uploads/sites/2/2025/09/VLS_5799-copy.jpg?quality=9"
+
+# Construct the Facebook post message
+message = f"{title}\n\n{summary}\n\nRead more: {article_url}"
+
+# --------------------
+# POST TO FACEBOOK
+# --------------------
+url = f"https://graph.facebook.com/{PAGE_ID}/photos"
+payload = {
+    "url": image_url,  # attach the full image
+    "caption": message,
+    "access_token": PAGE_ACCESS_TOKEN
+}
+
+response = requests.post(url, data=payload)
+
+if response.status_code == 200:
+    print("✅ Post successfully published with full image!")
+    print("Facebook post ID:", response.json().get("id"))
+else:
+    print("❌ Error posting to Facebook:", response.text)

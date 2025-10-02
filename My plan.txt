@@ -1,0 +1,44 @@
+Yeah, you got exactly what I want to build. You already know the main component. So now, it is the structure I want to tell you. First, you know, it fetches, like, news drops. Immediately a news is released, it drops. So, after dropping, after the news drops, I want you to go through the duplication first, before going through the AI rephrasing and all of that, because so as to maintain my API, my API key, because I'm going to be using AI API key, so to avoid rate limiting and all of that, I need it through. Okay? You understand? So, if you check for duplicate first, after checking for duplicate, it then goes to the AI and then rephrase it then, before posting to Facebook. Okay? I want you to help me write all that said now. Let me rephrase it very well.
+
+Aha, before I forget, when a news drops, it drops in XML format, so you need a very good thing that can extract every information that is going to be needed from XML stuff.
+
+So when the news drops, I want it to drop in a box, something like a box, I don't know, wherever it wants to drop, it should drop there, before going through AI. Because if it decides to check for duplicates with other things that have been posted, sometimes Artificial Intelligence rephrases the complete word. Okay, so it might not be able to get it, do you understand what I'm saying? If I forget that, add that. And again, for the API, for the Artificial Intelligence, I want it to use Tiri API. It is the same AI we are using, but in case one fails, it should retry another. I don't like whenever my system just stops. So whenever it won't fail, it should retry another one. So there should be like Tiri API keys there.
+
+After the news stays there for the duplicating check, but after 24 hours, it auto-clears from the database, from my storage. Because I don't want my storage to just come one day and my storage is full. So it needs to, every 24 hours, and the time is configurable, like I can configure the time, I can decide to change the time.
+
+I want everything to be like, it should be an enterprise-grade automation. So, everything must be, any details must be configured. Like, it must be in the configuration file, like the feeds. Okay, all the feeds will be in the configuration file. The time, whichever time, database information, all of that. So it will be easy for other people, aside me, to use the automation.
+
+
+Okay, I want in case in if if sometimes news just rushing okay what if the news just start rushing rushing and rushing and then start processing so there should be um some delays in between the rate each which information eat my API for the artificial intelligence so there should be and the delay should be configurable too I should be able to change how many seconds delay I want in the configuration and also how many seconds delay per news before the process if maybe 15 news came at once in the in the in just one minute or two minutes so there should be time in which each news will be processed delay I can be able to configure that too.
+
+Error Handling & Recovery
+
+Monitoring & Logging
+
+Store logs in a file or monitoring service.
+
+Log every step: feed fetch, duplicate skip, AI success/failure, Facebook post success/failure.
+
+and logs auto clears after 24hrs too configursble
+
+
+API keys & database should not live in config files directly.
+
+Use .env files to store secrets
+
+Multi-Platform Posting (Future-Proof)
+if i want to by any chance add other platform another agent wont find it hard to do so.
+
+
+and most importantly a perfect guide that even a beginer can use and everything will be live.
+
+for deployment i will use my ubuntu instance after i have pushed evrything to github. so for ubuntu deployment guide it will start from gitclone.
+
+since i said its an enterprise grade so what if others want to deploy it on any other place so u will make it very well.
+
+all feeds will be configurable in case i want to chnage niche i can just chnage feed. 
+and i can add as many feed as i want, and also, as many account as i want to add to post to, even if i add other platforms later.
+
+my details are in those tested script that are working. 
+
+pls my motto is NO ERROR. great error handling. 

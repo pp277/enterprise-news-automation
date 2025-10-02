@@ -1,0 +1,43 @@
+from sentence_transformers import SentenceTransformer, util
+
+# 1. Load model (small but strong one for semantic similarity)
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# 2. Example batch of news
+news_batch = [
+    "Apple releases iPhone 16 with major battery improvements",
+    "Apple launches iPhone 16 featuring improved battery life",
+    "iPhone 16 unveiled by Apple, promises longer-lasting battery",
+    "NASA announces new Europa mission to study Jupiter's icy moon",
+    "NASA reveals plans to send spacecraft to explore Europa, Jupiter’s moon",
+    "Microsoft completes $7.5 billion acquisition of gaming studio",
+    "Gaming studio bought by Microsoft for $7.5B",
+    "Microsoft acquires game developer in $7.5 billion deal"
+]
+
+# 3. Encode to embeddings
+embeddings = model.encode(news_batch, convert_to_tensor=True)
+
+# 4. Compare similarities
+threshold = 0.75  # tune this value
+clusters = []
+used = set()
+
+for i in range(len(news_batch)):
+    if i in used:
+        continue
+    cluster = [news_batch[i]]
+    used.add(i)
+    for j in range(i+1, len(news_batch)):
+        if j not in used:
+            sim = util.cos_sim(embeddings[i], embeddings[j]).item()
+            if sim >= threshold:
+                cluster.append(news_batch[j])
+                used.add(j)
+    clusters.append(cluster)
+
+# 5. Print results
+for idx, cluster in enumerate(clusters, 1):
+    print(f"\nCluster {idx}:")
+    for item in cluster:
+        print(" -", item)
