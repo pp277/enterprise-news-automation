@@ -363,7 +363,8 @@ class NewsAutomationSystem:
             # Test database
             try:
                 async with db_manager.get_session() as session:
-                    session.execute("SELECT 1")
+                    from sqlalchemy import text
+                    session.execute(text("SELECT 1"))
                 health_results["components"]["database"] = {"status": "healthy"}
             except Exception as e:
                 health_results["components"]["database"] = {"status": "unhealthy", "error": str(e)}
