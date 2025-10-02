@@ -41,7 +41,7 @@ class JSONFormatter(logging.Formatter):
                           'processName', 'process', 'getMessage', 'exc_info', 'exc_text', 'stack_info']:
                 log_entry[key] = value
         
-        return json.dumps(log_entry)
+        return json.dumps(log_entry, default=str)
 
 
 class ColoredConsoleFormatter(logging.Formatter):
