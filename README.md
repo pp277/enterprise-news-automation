@@ -37,8 +37,8 @@ A comprehensive, enterprise-grade automation system that monitors RSS feeds in r
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/news-automation.git
-   cd news-automation
+   git clone https://github.com/pp277/enterprise-news-automation.git
+   cd enterprise-news-automation
    ```
 
 2. **Run the deployment script**:
@@ -393,7 +393,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/news-automation/issues)
+- **Issues**: [GitHub Issues](https://github.com/pp277/enterprise-news-automation/issues)
 - **Documentation**: This README and inline code documentation
 - **Logs**: Check system logs for detailed error information
 

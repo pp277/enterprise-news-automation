@@ -82,7 +82,7 @@ sudo chown $USER:$USER $APP_DIR
 # Clone repository (if not already present)
 if [ ! -d "$APP_DIR/.git" ]; then
     print_status "Cloning repository..."
-    git clone https://github.com/yourusername/news-automation.git $APP_DIR
+    git clone https://github.com/pp277/enterprise-news-automation.git $APP_DIR
     cd $APP_DIR
 else
     print_status "Repository already exists, pulling latest changes..."
