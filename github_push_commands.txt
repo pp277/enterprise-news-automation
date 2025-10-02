@@ -1,0 +1,27 @@
+# GitHub Push Commands
+# Replace YOUR_GITHUB_URL with your actual GitHub repository URL
+
+# Step 1: Add GitHub repository as remote origin
+git remote add origin YOUR_GITHUB_URL
+
+# Step 2: Rename main branch to 'main' (GitHub's default)
+git branch -M main
+
+# Step 3: Push to GitHub
+git push -u origin main
+
+# Example with a real URL:
+# git remote add origin https://github.com/yourusername/enterprise-news-automation.git
+# git branch -M main  
+# git push -u origin main
+
+# If you get authentication errors, you might need to:
+# 1. Use a Personal Access Token instead of password
+# 2. Or set up SSH keys
+# 3. Or use GitHub CLI: gh auth login
+
+# Check remote status:
+git remote -v
+
+# Check if push was successful:
+git status
